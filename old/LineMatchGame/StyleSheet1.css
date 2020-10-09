@@ -1,0 +1,74 @@
+﻿body {
+    background: gray;
+}
+
+h2 {
+    font-size: 32px;
+}
+
+#moves {
+    padding-left: 100px;
+}
+
+#highScore{
+    padding-left: 100px;
+}
+
+#board {
+    margin-top: 10px;
+    font-size: 50px;
+    line-height: 26px;
+}
+
+.tile {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    margin: 4px;
+    vertical-align: top;
+}
+
+.b {
+    background: black;
+    color: black;
+}
+
+.w {
+    background: white;
+    color: white;
+}
+
+.smile {
+    background: grey;
+    transform: translate(-1px, 5px);
+}
+
+@keyframes b2w {
+    from {
+        background-color: black;
+    }
+
+    to {
+        background-color: white;
+    }
+}
+
+@keyframes w2b {
+    from {
+        background-color: white;
+    }
+
+    to {
+        background-color: black;
+    }
+}
+
+.x.b {
+    animation-name: b2w;
+    animation-duration: 2s;
+}
+
+.x.w {
+    animation-name: w2b;
+    animation-duration: 2s;
+}

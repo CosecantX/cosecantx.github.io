@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style>
+        :root {
+            --div-rows: 6;
+            --div-cols: 10;
+            --default-size: 100px;
+            --default-margin: 8px;
+        }
+        body {
+            background-color: white;
+        }
+        #area {
+            /*display: flex;
+            flex-wrap: wrap;*/
+            height: 98vh;
+            display: grid;
+            grid-template-rows: repeat(var(--div-rows), 1fr);
+            grid-template-columns: repeat(var(--div-cols), 1fr);
+        }
+        .cell {
+            /*height: var(--default-size);
+            width: var(--default-size);
+            height: 100%;
+            width: 100%;*/
+            border-radius: 25px;
+            margin: var(--default-margin);
+            border-style: solid;
+            border-width: 10px;
+        }
+        .emptycell {
+            /*height: var(--default-size);
+            width: var(--default-size);
+            height: calc(80vmin/var(--div-rows));
+            width: calc(80vmin/var(--div-cols));*/
+            border-radius: 25px;
+            margin: var(--default-margin);
+            border-color: rgb(245, 245, 245);
+            border-style: solid;
+            border-width: 10px;
+        }
+        .emptycell:hover {
+            border-color: rgb(220, 220, 220);
+        }
+        .selected {
+            width: calc(2 * var(--default-size) + 4 * var(--default-margin));
+            /*height: calc(2 * var(--default-size) + 2 * var(--default-margin) );*/
+        }
+    </style>
+</head>
+
+<body>
+    <div id='area'></div>
+
+<script>
+
+class Cell {
+    constructor(id, posx, posy) {
+        var me = this;
+        this.id = id;
+
+        this.insertEmpty();
+
+        document.getElementById(this.id).addEventListener('click', function cellInit () {
+            me.build(me.id);
+            document.getElementById(this.id).removeEventListener('click', cellInit);
+            document.getElementById(me.id).setAttribute('style', `${me.bgcolorStr} ${me.boxshStr} ${me.bordercolStr}`);
+        })
+    }
+
+    insertEmpty() {
+        let area = document.getElementById('area');
+        this.div = document.createElement('div');
+        this.div.setAttribute('class', 'emptycell');
+        this.div.setAttribute('id', this.id);
+
+        area.appendChild(this.div);
+    }
+
+    build(id, color, posx, posy) {
+        var me = this; 
+        this.id = id;
+        this.content = "";
+        if(color === undefined) 
+            this.colorRand();
+        else
+            this.color = color;
+        this.selected = false;
+        Cell.lastSelected;
+
+        // Strings to make life easier
+        this.bgcolorStr = `background-color: ${this.color};`;
+        this.bordercolStr = `border-color: ${this.color}`;
+        this.boxshStr = `box-shadow:0 0 10px 5px ${this.color};`;
+
+        // Function that expands or contracts cells
+        document.getElementById(me.id).addEventListener('click', function (event) {
+            let s = document.getElementById(me.id);
+
+            // If clicking on an unselected cell, select it and do all the graphical stuff
+            // If there's another cell already selected, deselect it
+            if (me.selected === false) {
+                s.setAttribute('class', 'cell selected');
+                if (Cell.lastSelected !== undefined && Cell.lastSelected.id !== me.id) {
+                    document.getElementById(Cell.lastSelected.id).setAttribute('class', 'cell');
+                    document.getElementById(Cell.lastSelected.id).setAttribute(
+                        'style', `${Cell.lastSelected.bgcolorStr} ${Cell.lastSelected.bordercolStr}`);
+                    Cell.lastSelected.selected = false;
+                }
+                Cell.lastSelected = me;
+                me.selected = true;
+            }
+            
+            else if (me.selected === true) {
+                s.setAttribute('class', 'cell');
+                me.selected = false;
+            }
+            
+            // Stop event from hitting background 
+            event.stopPropagation();
+        });
+
+        // Deselect cell if background is clicked
+        document.getElementById('area').addEventListener('click', function () {
+            if (Cell.lastSelected !== undefined) {
+                    document.getElementById(Cell.lastSelected.id).setAttribute('class', 'cell');
+                    document.getElementById(Cell.lastSelected.id).setAttribute(
+                        'style', `${Cell.lastSelected.bgcolorStr} ${Cell.lastSelected.bordercolStr}`);
+            }
+        })
+        
+        // Set cell to have background shadow while mouse is over it
+        document.getElementById(me.id).addEventListener('mouseover', function () {
+            document.getElementById(me.id).setAttribute('style', `${me.bgcolorStr} ${me.boxshStr} ${me.bordercolStr}`);
+        });
+
+        // Remove shadow once mouse leaves cell
+        document.getElementById(me.id).addEventListener('mouseout', function () {
+            if (me.selected === false)
+                document.getElementById(me.id).setAttribute('style', `${me.bgcolorStr} ${me.bordercolStr}`);
+        });
+    }
+
+    // Generate random color
+    colorRand() {
+        let r = Math.floor(Math.random() * 256);
+        let g = Math.floor(Math.random() * 256);
+        let b = Math.floor(Math.random() * 256);
+
+        this.color = `rgba(${r},${g},${b}, 0.4)`;
+    }
+
+    // Insert cell into page 
+    insert() {
+        let area = document.getElementById('area');
+        this.div = document.createElement('div');
+        this.div.setAttribute('class', 'cell');
+        this.div.setAttribute('id', this.id);
+        this.div.setAttribute('style', `background-color: ${this.color}; border-color: ${this.color}`);
+
+        area.appendChild(this.div);
+    }
+
+    setColor(color) { this.color = color; }
+
+    getID() { return this.id; }
+
+    getColor() { return this.color; }
+}
+
+var set = [];
+var k = (6 * 10);//prompt('How many?')
+for(let i = 0; i < k; i++) {
+    set[i] = new Cell('id' + i);
+}
+
+</script>
+</body>
+</html>

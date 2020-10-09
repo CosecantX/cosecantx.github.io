@@ -1,0 +1,131 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Test2</title>
+    <meta charset="UTF-8">
+    <script src="screen.js" type="text/javascript"></script>
+    <!-- <script src="../scripts/screen.js" type="text/javascript"></script> -->
+</head>
+    <body>
+        <canvas id="mycanvas" style="border: 1px solid #000000"></canvas>
+        <br />
+        <button id="stopButton">stop</button>
+        <button id="restartButton">restart</button>
+        <br /><br />
+        pixel size: <input type="text" id="pSize" size="2" value="5" /> x: <input type="text" id="x" size="2" value="160" /> y: <input type="text" id="y" size="2" value="100" />
+        <br />
+        <input type="text" id="code" value="(x * y / 2) % 16"/><button id="evalButton">evaluate</button>
+
+        <script>
+            // Palettes to pass to screen
+            var p0 = ["#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF"];
+            var p1 = ["#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000"];
+            var p2 = ["#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111"];
+            var p3 = ["#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222"];
+            var p4 = ["#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333"];
+            var p5 = ["#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444"];
+            var p6 = ["#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555"];
+            var p7 = ["#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666"];
+            var p8 = ["#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777"];
+            var p9 = ["#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888"];
+            var pA = ["#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999"];
+            var pB = ["#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA"];
+            var pC = ["#CCCCCC", "#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB"];
+            var pD = ["#DDDDDD", "#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC"];
+            var pE = ["#EEEEEE", "#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD"];
+            var pF = ["#FFFFFF", "#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#888888", "#999999", "#AAAAAA", "#BBBBBB", "#CCCCCC", "#DDDDDD", "#EEEEEE"];
+
+            var t;
+            var i = 0;
+            var running = true;
+            var command = '(x * y / 2) % 16';
+            var testStr = "";
+            var s = new screen("mycanvas", 5, 160, 100);
+
+            function drawTest() { // Creates the string
+                testStr = "";
+                for (var y = 0; y < s.returnHeight(); y++) {
+                    for (var x = 0; x < s.returnWidth(); x++) {
+                        switch (parseInt(eval(command))) {
+                            case 0: testStr = testStr.concat('0'); break;
+                            case 1: testStr = testStr.concat('1'); break;
+                            case 2: testStr = testStr.concat('2'); break;
+                            case 3: testStr = testStr.concat('3'); break;
+                            case 4: testStr = testStr.concat('4'); break;
+                            case 5: testStr = testStr.concat('5'); break;
+                            case 6: testStr = testStr.concat('6'); break;
+                            case 7: testStr = testStr.concat('7'); break;
+                            case 8: testStr = testStr.concat('8'); break;
+                            case 9: testStr = testStr.concat('9'); break;
+                            case 10: testStr = testStr.concat('A'); break;
+                            case 11: testStr = testStr.concat('B'); break;
+                            case 12: testStr = testStr.concat('C'); break;
+                            case 13: testStr = testStr.concat('D'); break;
+                            case 14: testStr = testStr.concat('E'); break;
+                            case 15: testStr = testStr.concat('F'); break;
+                            default: testStr = testStr.concat('X'); console.log("incorrect entry in testStrPass: " + temp); break;
+                        }
+                    }
+                }
+            };
+
+            function runTest() { // Cycles through palettes
+                if (running == true) {
+                    if (i >= 16) { i = 0 };
+                    switch (i) {
+                        case 0: s.setPalette(p0); break;
+                        case 1: s.setPalette(p1); break;
+                        case 2: s.setPalette(p2); break;
+                        case 3: s.setPalette(p3); break;
+                        case 4: s.setPalette(p4); break;
+                        case 5: s.setPalette(p5); break;
+                        case 6: s.setPalette(p6); break;
+                        case 7: s.setPalette(p7); break;
+                        case 8: s.setPalette(p8); break;
+                        case 9: s.setPalette(p9); break;
+                        case 10: s.setPalette(pA); break;
+                        case 11: s.setPalette(pB); break;
+                        case 12: s.setPalette(pC); break;
+                        case 13: s.setPalette(pD); break;
+                        case 14: s.setPalette(pE); break;
+                        case 15: s.setPalette(pF); break;
+                    }
+                    s.draw16(testStr); // Draws to screen
+                    i++;
+                    t = setTimeout(runTest, 16);
+                }
+            };
+
+            function stop() {
+                clearTimeout(t);
+                running = false;
+            };
+
+            function restart() {
+                if (running == false) {
+                    running = true;
+                    runTest();
+                }
+            };
+
+            document.getElementById("stopButton").addEventListener("click", function () { stop() });
+
+            document.getElementById("restartButton").addEventListener("click", function () { restart() });
+
+            document.getElementById("evalButton").addEventListener("click", function () {
+                command = document.getElementById('code').value;
+                s.setScreenAttributes(document.getElementById('pSize').value, document.getElementById('x').value, document.getElementById('y').value);
+                testStr = "";
+                drawTest();
+                restart()
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+
+                drawTest();
+                runTest();
+                
+            });
+        </script>
+    </body>
+</html>
