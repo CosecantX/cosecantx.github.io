@@ -1,2 +1,2 @@
 # cosecantx.github.io
-cosecantx.github.io
+[Link](cosecantx.github.io)
